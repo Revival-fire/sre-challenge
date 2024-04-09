@@ -8,7 +8,7 @@ terraform {
 }
 provider "aws" {
     region = "us-west-2"
-    profile = "sre-challenge"
+    profile = "639035123345_PowerUserAccess"
 }
 
 terraform {
@@ -17,7 +17,7 @@ terraform {
     key    = "terraform_state"
     region = "us-west-2"
     encrypt = true
-    profile = "sre-challenge"
+    profile = "639035123345_PowerUserAccess"
     sts_region = "eu-west-1"
   }
 }
