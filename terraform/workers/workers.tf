@@ -1,6 +1,6 @@
 variable "workers_ami" {
     type    = string
-    default = "ami-08f7912c15ca96832"
+    default = "ami-0eb199b995e2bc4e3"
 }
 
 variable "security_groups" {
