@@ -22,6 +22,13 @@ As part of this challenge, you will undertake the following tasks:
 
 ## Getting Started
 
+### Pre-requisites
+You will need to install the following tools to deploy and work with the repo
+
+1. aws-cli -> [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+2. Terraform -> [https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+
 To get started with the SRE Challenge project, follow these steps:
 
 1. Fork this repository [https://github.com/crazywizard254/sre-challenge](https://github.com/crazywizard254/sre-challenge) and clone to your local machine:
