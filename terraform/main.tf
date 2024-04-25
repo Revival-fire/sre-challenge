@@ -2,30 +2,25 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.40.0"
+      version = "~> 5.0"
     }
   }
 }
+
+# Configure the AWS Provider
 provider "aws" {
-    region = "us-west-2"
-    profile = "639035123345_PowerUserAccess"
+  region = "us-east-1"
 }
 
-terraform {
-  backend "s3" {
-    bucket = "eea-sre-challenge"
-    key    = "terraform_state"
-    region = "us-west-2"
-    encrypt = true
-    profile = "639035123345_PowerUserAccess"
-    sts_region = "eu-west-1"
-  }
-}
+
+
+
+
 
 module "payments_workers" {
     source     = "./workers"
     name       = "payments_workers"
-    min_size   = 2
+    min_size   = 2   # there no space to impliment sre best practice 
     desired_capacity = 2
     max_size   = 2
     instance_type = "t3.nano"
@@ -35,7 +30,7 @@ module "payments_workers" {
 module "background_workers" {
     source     = "./workers"
     name       = "background_workers"
-    min_size   = 2
+    min_size   = 2 #there no way to implment sre best practices
     desired_capacity = 2
     max_size   = 2
     cpuscale = 60.0
@@ -68,7 +63,7 @@ resource "aws_autoscaling_schedule" "daily_messaging_scale_in" {
 
 resource "aws_autoscaling_schedule" "evening_payments_scale_out" {
     scheduled_action_name  = "evening_payments_scale_out"
-    min_size               = 4
+    min_size               = 4  # it is too much it should be smaller
     max_size               = 8
     desired_capacity       = -1
     recurrence             = "0 15 * * *"
@@ -91,8 +86,8 @@ resource "aws_codedeploy_app" "sre-terraform-app" {
 resource "aws_codedeploy_deployment_group" "workers-deployment_grp" {
     app_name              = "sre-terraform-app"
     deployment_group_name = "workers"
-    service_role_arn      = "arn:aws:iam::639035123345:role/CodeDeploy-EC2-Role"
-    deployment_config_name= "CodeDeployDefault.AllAtOnce"
+    service_role_arn      = "arn:aws:iam::532568838693:role/CodeDeploy-EC2-Role"  # service role not created there is hard coding here whish improper
+    deployment_config_name= "CodeDeployDefault.AllAtOnce"  #Hard coded 
 
     autoscaling_groups    = ["${module.background_workers.scaling_group_id}",
                              "${module.messaging_background_workers.scaling_group_id}",
@@ -104,22 +99,22 @@ resource "aws_codedeploy_deployment_group" "workers-deployment_grp" {
 
 variable "elb_name" {
     type    = string
-    default = "sre-application-alb"    
+    default = "sre-application-alb"   #NOT CREATED 
 }
 
 variable "vpc_id" {
     type    = string
-    default = "vpc-0792372e93a253e53"    
+    default = "vpc-023ad2f459fff65bc"    #hard coded
 }
 
 variable "public_subnet_ids" {
     type = list(string)
-    default = ["subnet-0c80a127103c7f99e", "subnet-08c1c9049e6629ec4"]
+    default = ["subnet-0be246c92f4a60ad5", "subnet-00d971a4cb1677c15"] # hard coded
 }
 
 variable "sns_topic" {
     type    = string
-    default = "arn:aws:sns:us-west-2:639035123345:Admins"
+    default = "arn:aws:sns:us-east-1:532568838693:Admins" #hard coded create this one
 }
 
 module "application" {
@@ -227,7 +222,7 @@ resource "aws_lb_listener_rule" "application" {
 resource "aws_codedeploy_deployment_group" "application-deployment-grp" {
     app_name              = "sre-terraform-app"
     deployment_group_name = "application"
-    service_role_arn      = "arn:aws:iam::639035123345:role/CodeDeploy-EC2-Role"
+    service_role_arn      = "arn:aws:iam::532568838693:role/CodeDeploy-EC2-Role" # hard coding create this one
 
     deployment_style {
         deployment_option = "WITH_TRAFFIC_CONTROL"
@@ -263,3 +258,5 @@ output "alb_security_group_id" {
 output "target_group_arn" {
   value = aws_lb_target_group.application.arn
 }
+
+

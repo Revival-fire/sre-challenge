@@ -1,11 +1,11 @@
 variable "application_ami" {
     type    = string
-    default = "ami-08f7912c15ca96832"
+    default = "ami-0cd59ecaf368e5ccf"
 }
 
 variable "security_groups" {
     type = list(string)
-    default = ["sg-0c38630af0afc6df0"]
+    default = ["sg-027c1c5aeadbd88b9"]
 }
 
 variable "alb_security_group_id" {
@@ -58,7 +58,7 @@ variable "extra_tags" {
 resource "aws_launch_template" "application" {
     name                   = "sre_application"
     image_id               = "${var.application_ami}"
-    key_name               = "Devops Primary"
+    key_name               = "Keys"
     instance_type          = "${var.instance_type}"
     vpc_security_group_ids = concat(var.security_groups, [var.alb_security_group_id])
     tag_specifications {
@@ -100,7 +100,7 @@ resource "aws_autoscaling_group" "application" {
     min_size = "${var.min_size}"
     desired_capacity = "${var.desired_capacity}"
     max_size = "${var.max_size}"
-    vpc_zone_identifier = ["subnet-0c80a127103c7f99e", "subnet-08c1c9049e6629ec4"]
+    vpc_zone_identifier = ["subnet-0be246c92f4a60ad5", "subnet-00d971a4cb1677c15"]
 
     launch_template {
       id        = "${aws_launch_template.application.id}"

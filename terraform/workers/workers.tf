@@ -1,11 +1,11 @@
 variable "workers_ami" {
     type    = string
-    default = "ami-0eb199b995e2bc4e3"
+    default = "ami-0cd59ecaf368e5ccf"  #not present 
 }
 
 variable "security_groups" {
     type = list(string)
-    default = ["sg-0c38630af0afc6df0"]
+    default = ["sg-027c1c5aeadbd88b9"] #not present create this security group
 }
 
 variable "name" {
@@ -55,9 +55,9 @@ variable "extra_tags" {
 resource "aws_launch_template" "workers" {
     name                   = "workers_${var.name}"
     image_id               = "${var.workers_ami}"
-    key_name               = "Devops Primary"
+    key_name               = "Keys"
     instance_type          = "${var.instance_type}"
-    vpc_security_group_ids = "${var.security_groups}"
+    vpc_security_group_ids = "${var.security_groups}"  #correct this 
     tag_specifications {
         resource_type = "instance"
 
@@ -70,7 +70,7 @@ resource "aws_launch_template" "workers" {
     }    
 
     iam_instance_profile {
-        name = "CodeDeploy-EC2-Instance-Profile"
+        name = "CodeDeploy-EC2-Instance-Profile"  # this not present 
     }
 
     lifecycle {
@@ -97,7 +97,7 @@ resource "aws_autoscaling_group" "workers" {
     min_size = "${var.min_size}"
     desired_capacity = "${var.desired_capacity}"
     max_size = "${var.max_size}"
-    vpc_zone_identifier = ["subnet-056e052ec65ff2bf2", "subnet-0fe317b6ad2fff63b"]
+    vpc_zone_identifier = ["subnet-0be246c92f4a60ad5", "subnet-00d971a4cb1677c15"]  # This hard coded not picked dynamically
  
     launch_template {
       id        = "${aws_launch_template.workers.id}"
